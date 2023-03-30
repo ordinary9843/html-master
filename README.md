@@ -89,9 +89,8 @@ $htmlMaster->parse('https://github.com/ordinary9843');
  * Get error message.
  *
  * Output: [
- *  'Error message 1.',
- *  'Error message 2.',
- *  'Error message 3.'
+ *  '[INFO] Message ...',
+ *  '[ERROR] Message ...',
  * ]
  */
 $htmlMaster->getError();
