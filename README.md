@@ -1,4 +1,4 @@
-# HtmlMaster
+# Html Master
 
 [![build](https://github.com/ordinary9843/html-master/actions/workflows/build.yml/badge.svg)](https://github.com/ordinary9843/html-master/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/ordinary9843/html-master/branch/master/graph/badge.svg?token=QKCE7LJISZ)](https://codecov.io/gh/ordinary9843/html-master)
@@ -90,7 +90,7 @@ $htmlMaster->parse('https://github.com/ordinary9843');
  *
  * Output: [
  *  '[INFO] Message ...',
- *  '[ERROR] Message ...',
+ *  '[ERROR] Message ...'
  * ]
  */
 $htmlMaster->getError();
