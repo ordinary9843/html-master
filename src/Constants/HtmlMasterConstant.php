@@ -2,7 +2,7 @@
 
 namespace Ordinary9843\Constants;
 
-class MasterConstant
+class HtmlMasterConstant
 {
     /** @var array */
     const USER_AGENTS = [

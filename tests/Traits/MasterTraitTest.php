@@ -3,7 +3,9 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use Ordinary9843\Constants\HtmlMasterConstant;
 use Ordinary9843\Traits\MasterTrait;
+use GuzzleHttp\Client;
 
 class MasterTraitTest extends TestCase
 {
@@ -15,6 +17,62 @@ class MasterTraitTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+    }
+
+    /**
+     * @return void
+     */
+    public function testClient(): void
+    {
+        $this->assertInstanceOf(Client::class, $this->getClient());
+    }
+
+    /**
+     * @return void
+     */
+    public function testConnectionTimeout(): void
+    {
+        $connectionTimeout = 5;
+        $this->setConnectTimeout($connectionTimeout);
+        $this->assertEquals($connectionTimeout, $this->getConnectTimeout());
+    }
+
+    /**
+     * @return void
+     */
+    public function testTimeout(): void
+    {
+        $timeout = 5;
+        $this->setTimeout($timeout);
+        $this->assertEquals($timeout, $this->getTimeout());
+    }
+
+    /**
+     * @return void
+     */
+    public function testExecutablePath(): void
+    {
+        $executablePath = '/usr/bin/chromium';
+        $this->setExecutablePath($executablePath);
+        $this->assertEquals($executablePath, $this->getExecutablePath());
+    }
+
+    /**
+     * @return void
+     */
+    public function testWaitSeconds(): void
+    {
+        $waitSeconds = 5;
+        $this->setWaitSeconds($waitSeconds);
+        $this->assertEquals($waitSeconds, $this->getWaitSeconds());
+    }
+
+    /**
+     * @return void
+     */
+    public function testUserAgent(): void
+    {
+        $this->assertContains($this->getUserAgent(), HtmlMasterConstant::USER_AGENTS);
     }
 
     /**
