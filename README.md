@@ -12,7 +12,7 @@ Analyzing and crawling the html structure of a static/dynamic website.
 This library has the following requirements:
 
 - PHP 7.1+
-- NodeJs 12+
+- NodeJs 14+
 - Browser (default browser is `/use/bin/chromium`)
 
 ## Installation
