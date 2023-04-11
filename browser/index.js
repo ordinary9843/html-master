@@ -9,8 +9,8 @@ class Crawler {
     this.executablePath = "/usr/bin/chromium";
 
     /**
-   * @type {number}
-   */
+     * @type {number}
+     */
     this.connectTimeout = 5;
 
     /**
@@ -45,8 +45,8 @@ class Crawler {
   }
 
   /**
-     * @returns {number}
-     */
+   * @returns {number}
+   */
   getConnectionTimeout() {
     return this.connectTimeout;
   }
@@ -61,24 +61,24 @@ class Crawler {
   }
 
   /**
-     * @returns {number}
-     */
+   * @returns {number}
+   */
   getWaitSeconds() {
     return this.waitSeconds;
   }
 
   /**
-  * @param {string} userAgent
-  *
-  * @returns {void}
-  */
+   * @param {string} userAgent
+   *
+   * @returns {void}
+   */
   setUserAgent(userAgent) {
     this.userAgent = userAgent;
   }
 
   /**
-  * @returns {string}
-  */
+   * @returns {string}
+   */
   getUserAgent() {
     return this.userAgent;
   }
@@ -97,22 +97,17 @@ class Crawler {
     if (userAgent) {
       args.push(`--user-agent=${userAgent}`);
     }
-    const timeout = (seconds) => {
-      return new Promise((_, reject) => {
-        setTimeout(() => reject(new Error("The browser cannot be opened")), seconds * 1000);
-      });
-    };
     const browser = await Promise.race([
       puppeteer.launch({
         javascriptEnabled: true,
         executablePath: this.getExecutablePath(),
         args,
       }),
-      timeout(this.getConnectionTimeout()),
+      await this.timeout(this.getConnectionTimeout()),
     ]);
     const page = await browser.newPage();
     await page.goto(url);
-    await this.wait(this.getWaitSeconds());
+    await this.timeout(this.getWaitSeconds());
     const html = await page.content();
     await page.close();
     await browser.close();
@@ -123,9 +118,9 @@ class Crawler {
   /**
    * @param {number} seconds
    *
-   * @returns {void}
+   * @returns {Promise<void>}
    */
-  async wait(seconds) {
+  async timeout(seconds) {
     return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
   }
 }
@@ -134,7 +129,6 @@ class Crawler {
   try {
     const crawler = new Crawler();
     const [, executablePath, connectionTimeout, waitSeconds, userAgent, url] = process.argv.slice(1);
-
     if (executablePath) {
       crawler.setExecutablePath(executablePath);
     }
