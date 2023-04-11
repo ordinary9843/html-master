@@ -42,6 +42,7 @@ class HtmlMaster extends Master
 
             $mapping = [
                 '{executablePath}' => $this->getExecutablePath(),
+                '{conectionTimeout}' => $this->getConnectTimeout(),
                 '{waitSeconds}' => $this->getWaitSeconds(),
                 '{userAgent}' => $this->getUserAgent(),
                 '{url}' => $url

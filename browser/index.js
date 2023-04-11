@@ -9,6 +9,11 @@ class Crawler {
     this.executablePath = "/usr/bin/chromium";
 
     /**
+   * @type {number}
+   */
+    this.connectTimeout = 5;
+
+    /**
      * @type {number}
      */
     this.waitSeconds = 5;
@@ -31,6 +36,22 @@ class Crawler {
   }
 
   /**
+   * @param {number} connectTimeout
+   *
+   * @returns {void}
+   */
+  setConnectionTimeout(connectTimeout) {
+    this.connectTimeout = connectTimeout;
+  }
+
+  /**
+     * @returns {number}
+     */
+  getConnectionTimeout() {
+    return this.connectTimeout;
+  }
+
+  /**
    * @param {number} waitSeconds
    *
    * @returns {void}
@@ -40,8 +61,8 @@ class Crawler {
   }
 
   /**
-   * @returns {number}
-   */
+     * @returns {number}
+     */
   getWaitSeconds() {
     return this.waitSeconds;
   }
@@ -76,26 +97,27 @@ class Crawler {
     if (userAgent) {
       args.push(`--user-agent=${userAgent}`);
     }
-    const browser = await puppeteer.launch({
-      javascriptEnabled: true,
-      executablePath: this.getExecutablePath(),
-      args,
-    });
+    const timeout = (seconds) => {
+      return new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("The browser cannot be opened")), seconds * 1000);
+      });
+    };
+    const browser = await Promise.race([
+      puppeteer.launch({
+        javascriptEnabled: true,
+        executablePath: this.getExecutablePath(),
+        args,
+      }),
+      timeout(this.getConnectionTimeout()),
+    ]);
+    const page = await browser.newPage();
+    await page.goto(url);
+    await this.wait(this.getWaitSeconds());
+    const html = await page.content();
+    await page.close();
+    await browser.close();
 
-    try {
-      const page = await browser.newPage();
-      await page.goto(url);
-      await this.wait(this.getWaitSeconds());
-      await page.close();
-      const html = await this.page.content();
-      await browser.close();
-
-      return html;
-    } catch (error) {
-      await browser.close();
-
-      return "";
-    }
+    return html;
   }
 
   /**
@@ -111,10 +133,14 @@ class Crawler {
 (async () => {
   try {
     const crawler = new Crawler();
-    const [, executablePath, waitSeconds, userAgent, url] = process.argv.slice(1);
+    const [, executablePath, connectionTimeout, waitSeconds, userAgent, url] = process.argv.slice(1);
 
     if (executablePath) {
       crawler.setExecutablePath(executablePath);
+    }
+
+    if (connectionTimeout) {
+      crawler.setConnectionTimeout(connectionTimeout);
     }
 
     if (waitSeconds) {
@@ -131,4 +157,6 @@ class Crawler {
   } catch (error) {
     console.log(error.message);
   }
+
+  process.exit(1);
 })();
