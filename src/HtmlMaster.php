@@ -33,7 +33,6 @@ class HtmlMaster extends Master
     private function parseHtml(string $url): string
     {
         if ($this->isDynamic()) {
-            $this->setError('[INFO] As the browser `chromium` or `node` does not exist, static mode parsing is used. Please check if `chromium` is installed and set the correct path using `setExecutablePath()` to enable dynamic mode parsing.');
             if (!is_dir('./browser/node_modules')) {
                 $this->setError('[INFO] The `node_modules` directory does not exist. Installing related modules now.');
                 shell_exec('cd ./browser && npm install');
